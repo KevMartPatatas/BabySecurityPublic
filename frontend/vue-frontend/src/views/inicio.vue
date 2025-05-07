@@ -36,5 +36,7 @@ import inicio from '../components/iniciosquare.vue';
 
   </div>
 </template>
+Lcsmkjm
 
+sdmmdsmslñ<s>dmfdjn</s>
 
