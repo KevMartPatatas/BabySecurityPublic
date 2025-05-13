@@ -12,7 +12,7 @@ function logout() {
 
 <template>
   <button
-      class="rounded-md bg-red-500 p-3 w-1/2 mt-2 ml-2 text-white"
+      class="rounded-md bg-red-500 mt-2 ml-2 text-white"
       @click="logout"
   >
     Logout

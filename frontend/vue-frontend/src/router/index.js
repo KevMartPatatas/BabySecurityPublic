@@ -4,44 +4,54 @@ import {useUserStore} from "@/stores/user.js";
 import HomeView from '../views/HomeView.vue'
 import LoginView from '@/views/LoginView.vue';
 import Dashboard from "@/views/Dashboard.vue";
-import GestionNinos from '@/views/GestionNinos.vue';
+import GestionNinos from '@/views/GestionView.vue';
 import Reportes from '@/components/Reportes.vue';
-import Inicio from '@/views/inicio.vue';
+import Inicio from '@/views/InicioView.vue';
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
-      path: '/',
-      name: 'dashboard',
-      component: HomeView
-    },
-    {
       path: '/login',
-      name: 'login',
-      component: LoginView
-    },
-    {
-      path: '/about',
-      name: 'about',
-      component: () => import('../views/AboutView.vue')
+      name: 'Login',
+      component: LoginView,
+      meta: { hideGlobals: true, requiresAuth: true }
     },
     {
       path: '/gestion',
-      name: 'gestion',
-      component: GestionNinos
+      name: 'Gestion',
+      component: GestionNinos,
+      meta: { requiresAuth: true },
     },
     {
       path: '/reporte',
-      name: 'reporte',
-      component: Reportes
+      name: 'Reporte',
+      component: Reportes,
+      meta: { requiresAuth: true },
     }
     ,
     {
       path: '/inicio',
-      name: 'inicio',
-      component: Inicio
+      name: 'Inicio',
+      component: Inicio,
+      meta: { requiresAuth: true },
     }
   ]
 })
+
+
+router.beforeEach((to, from, next) => {
+  const userStore = useUserStore();
+
+  if (to.name === 'Login' && !userStore.userIsLoggedIn) {
+    next(); // Permite ir a Login si no está autenticado
+  } else if (to.name === 'Login' && userStore.userIsLoggedIn) {
+    next({ name: 'Inicio' }); // Evita que un usuario autenticado acceda al login
+  } else if (!userStore.userIsLoggedIn) {
+    next({ name: 'Login' }); // Redirige al login si intenta acceder a otras rutas
+  } else {
+    next(); // Permite la navegación
+  }
+});
+
 export default router
