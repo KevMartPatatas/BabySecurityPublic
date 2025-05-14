@@ -7,6 +7,7 @@ import Dashboard from "@/views/Dashboard.vue";
 import GestionNinos from '@/views/GestionView.vue';
 import Reportes from '@/components/Reportes.vue';
 import Inicio from '@/views/InicioView.vue';
+import AsistenciaView from '@/views/AsistenciaView.vue';
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -28,12 +29,17 @@ const router = createRouter({
       name: 'Reporte',
       component: Reportes,
       meta: { requiresAuth: true },
-    }
-    ,
+    },
     {
       path: '/inicio',
       name: 'Inicio',
       component: Inicio,
+      meta: { requiresAuth: true },
+    },
+    {
+      path: '/asistencia',
+      name: 'Asistencia',
+      component: AsistenciaView,
       meta: { requiresAuth: true },
     }
   ]
