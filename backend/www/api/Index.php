@@ -14,6 +14,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 include 'DBConn.php';
 include 'Login.php';
 include 'Alumnos.php';
+include 'Asistencias.php';
 
 $rp = json_decode(file_get_contents('php://input'), true);
 if (!$rp || !isset($rp["option"])) {
@@ -25,6 +26,8 @@ if (!$rp || !isset($rp["option"])) {
 $conexion = DBConn::newConnection();
 $login = new Login($conexion);
 $getAlumnos = new Alumnos($conexion);
+$guardarAsistencia = new Asistencias($conexion);
+$obtenerAsistencias = new Asistencias($conexion);
 
 
 $option = $rp["option"];
@@ -44,8 +47,8 @@ switch ($option) {
         break;
 
     case 'getAlumnos':
-        $grupo = $rp["grupo"];
-        $response = $getAlumnos->getAlumnos($grupo);
+        $matricula = $rp["matricula"];
+        $response = $getAlumnos->getAlumnos($matricula);
 
         if ($response) {
             echo $response;
@@ -55,9 +58,33 @@ switch ($option) {
         }
         break;
 
+    case 'guardarAsistencia':
+        $asistencias = $rp["asistencias"];
+        $response = $guardarAsistencia->guardarAsistencia($asistencias);
+
+        if ($response) {
+            echo $response;
+        } else {
+            http_response_code(405);
+            echo json_encode(["message" => "Error al guardar las asistencias en la base de datos"]);
+        }
+        break;
+
+    case 'getAsistencias':
+        $clave_grupo = $rp["clave_grupo"];
+        $response = $obtenerAsistencias->obtenerAsistencias($clave_grupo);
+
+        if ($response) {
+            echo $response;
+        } else {
+            http_response_code(406);
+            echo json_encode(["message" => "Error al obtener las asistencias en la base de datos"]);
+        }
+        break;
+
 
 
     default:
-        http_response_code(403);
-        echo json_encode(["message" => "403"]);
+        http_response_code(402);
+        echo json_encode(["message" => "Comando no encontrado"]);
 }

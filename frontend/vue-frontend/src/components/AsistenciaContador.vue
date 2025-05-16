@@ -2,7 +2,11 @@
     defineProps({
         bgcolor: String,
         estado: String,
-        contador: String
+        contador: {
+    type: [String, Number],
+    required: true
+  }
+
     })
 </script>
 

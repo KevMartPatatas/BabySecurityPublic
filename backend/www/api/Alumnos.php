@@ -9,16 +9,32 @@ class Alumnos
         $this->conexion = $conexion;
     }
 
-    public function getAlumnos($grupo)
+    public function getAlumnos($matricula)
     {
-        $query = "SELECT nocontrol, nombre, apellidos, sexo, status, tutor, direccion, telefono, grupo_clave FROM alumno WHERE grupo_clave = ?";
+        $query = "SELECT a.no_control, a.nombre, a.apellidos, a.sexo, a.status, 
+                     a.tutor_nombre, a.direccion, a.telefono_tutor, a.clave_grupo 
+              FROM alumnos a
+              JOIN grupos g ON a.clave_grupo = g.clave_grupo 
+              WHERE g.matricula_docente = ?";
+
         $stmt = $this->conexion->prepare($query);
-        $stmt->bind_param('s', $grupo);
-        $stmt->execute();
+        if (!$stmt) {
+            return json_encode(['error' => 'Error al preparar la consulta']);
+        }
+
+        $stmt->bind_param('s', $matricula);
+
+        if (!$stmt->execute()) {
+            return json_encode(['error' => 'Error al ejecutar la consulta']);
+        }
+
         $stmt->store_result();
 
         if ($stmt->num_rows > 0) {
-            $stmt->bind_result($nocontrol, $nombre, $apellidos, $sexo, $status, $tutor, $direccion, $telefono, $grupo_clave);
+            $stmt->bind_result($nocontrol, $nombre, $apellidos, $sexo, $status, $tutor, $direccion, $telefono, $clave_grupo);
+
+            $alumnosObtenidos = [];
+
             while ($stmt->fetch()) {
                 $alumnosObtenidos[] = [
                     'nocontrol' => $nocontrol,
@@ -29,13 +45,14 @@ class Alumnos
                     'tutor' => $tutor,
                     'direccion' => $direccion,
                     'telefono' => $telefono,
-                    'grupo_clave' => $grupo_clave
+                    'clave_grupo' => $clave_grupo
                 ];
             }
 
             return json_encode(['alumnos' => $alumnosObtenidos]);
         }
 
-        return false;
+        return json_encode(['alumnos' => []]);
     }
+
 }

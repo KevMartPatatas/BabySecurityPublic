@@ -45,9 +45,11 @@
         </li>
       </ul>
       <LogoutButton />
+      <RouterLink to="/notificaciones">
       <button class="btn btn-warning ms-auto rounded-circle">
         <i class="bi bi-bell-fill"></i>
       </button>
+      </RouterLink>
     </nav>
 </template>
 
@@ -57,12 +59,9 @@
 }
 
 .nav-link {
-  padding-bottom: 0.25rem; /* ajusta según necesidad */
+  padding-bottom: 0.25rem;
   line-height: 1.2;
-}
-
-.nav-link.active {
-  border-bottom: 5px solid #A3D9A5;
+  display: inline-block; /* asegúrate de que el border se comporte bien */
 }
 
 .nav-link.active {

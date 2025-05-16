@@ -8,24 +8,31 @@ import AgregarAlumnoBoton from '@/components/AgregarAlumnoBoton.vue';
 
 import { useUserStore } from '@/stores/user.js';
 const userStore = useUserStore()
-const grupo = userStore.grupo
+const matricula = userStore.matricula
 const alumnosInscritos = ref([])
 
 
 onMounted(async () => {
   try {
     const response = await axios.post("http://localhost:80/api/Index.php", {
-      grupo: grupo,
+      matricula: matricula,
       option: "getAlumnos"
     })
-    alumnosInscritos.value = response.data.alumnos
+
+    // Verificamos que exista y sea array
+    if (Array.isArray(response.data.alumnos)) {
+      alumnosInscritos.value = response.data.alumnos
+    } else {
+      alumnosInscritos.value = [] // Valor por defecto
+    }
 
     console.log("Alumnos: ", alumnosInscritos.value)
   } catch (error) {
-      console.error("Error al obtener lista de alumnos: ", error)
-    }
-
+    console.error("Error al obtener lista de alumnos: ", error)
+    alumnosInscritos.value = [] // fallback en caso de error
+  }
 })
+
 </script>
 
 <template>

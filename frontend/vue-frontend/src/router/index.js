@@ -8,6 +8,7 @@ import GestionNinos from '@/views/GestionView.vue';
 import Reportes from '@/components/Reportes.vue';
 import Inicio from '@/views/InicioView.vue';
 import AsistenciaView from '@/views/AsistenciaView.vue';
+import NotificacionesView from '@/views/NotificacionesView.vue';
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -40,6 +41,12 @@ const router = createRouter({
       path: '/asistencia',
       name: 'Asistencia',
       component: AsistenciaView,
+      meta: { requiresAuth: true },
+    },
+    {
+      path: '/notificaciones',
+      name: 'Notificaciones',
+      component: NotificacionesView,
       meta: { requiresAuth: true },
     }
   ]

@@ -21,7 +21,7 @@ const abrirModal = (alumno) => {
 <template>
   <div class="alumnos-inscritos row">
     <div v-for="(alumno, index) in alumnos" :key="index" class="col-md-4 mb-4">
-      <div class="card w-100 h-100 rounded-4" :class="{'bg-m': alumno.sexo === 'm', 'bg-f': alumno.sexo === 'f'}">
+      <div class="card w-100 h-100 rounded-4" :class="{'bg-m': alumno.sexo === 'm' || alumno.sexo === 'M', 'bg-f': alumno.sexo === 'f'  || alumno.sexo === 'F'}">
         <div class="card-body d-flex align-items-center">
           <div class="icon-circle fs-3">
             <i class="fa-solid fa-user" style="color: #ababab;"></i>
@@ -49,7 +49,9 @@ const abrirModal = (alumno) => {
         <div class="modal-body">
           <!-- Mostrar los datos del alumno seleccionado -->
           <p><strong>Nombre:</strong> {{ alumnoSeleccionado?.nombre }} {{ alumnoSeleccionado?.apellidos }}</p>
+          <p><strong>Numero de control: </strong> {{ alumnoSeleccionado?.nocontrol }} </p>
           <p><strong>Status:</strong> {{ alumnoSeleccionado?.status }}</p>
+          <p><strong>Grupo:</strong> {{ alumnoSeleccionado?.clave_grupo }}</p>
           <p v-if="alumnoSeleccionado?.sexo === 'f'"><strong>Sexo:</strong> femenino</p>
           <p v-else="alumnoSeleccionado?.sexo === 'm'"><strong>Sexo:</strong> masculino</p>
         </div>

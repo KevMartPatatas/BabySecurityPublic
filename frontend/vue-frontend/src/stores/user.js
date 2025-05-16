@@ -7,9 +7,10 @@ export const useUserStore = defineStore('user', () => {
 
         const user = ref(null)
         const nombre = ref(null)
-        const grupo = ref(null)
+        const matricula = ref(null)
         const password = ref(null)
         const userIsLoggedIn = ref(false)
+        const clave_grupo = ref(null)
 
         async function login(username, password) {
             try {
@@ -20,11 +21,11 @@ export const useUserStore = defineStore('user', () => {
                 });
 
                 console.log(response.data)
-                user.value = response.data.matricula
                 nombre.value = response.data.nombre
-                grupo.value = response.data.grupo
+                matricula.value = response.data.matricula
+                clave_grupo.value = response.data.clave_grupo
                 userIsLoggedIn.value = response.data.userIsLoggedIn;
-                console.log(user.value, nombre.value, grupo.value)
+                console.log(nombre.value, matricula.value, clave_grupo.value)
         
                 // Redirigir al Home
                 router.push({ name: "Inicio" });
@@ -41,7 +42,7 @@ export const useUserStore = defineStore('user', () => {
             this.userIsLoggedIn = false
         }
 
-        return {user, nombre, grupo, userIsLoggedIn, $reset, login }
+        return {nombre, clave_grupo, matricula, userIsLoggedIn, $reset, login }
     },
     {
         persist: true,

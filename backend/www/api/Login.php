@@ -20,18 +20,22 @@ class Login
             return false;
         }
 
-        $query = "SELECT matricula, nombre, apellidos, password, direccion, sexo, telefono, grupo_clave FROM docente WHERE matricula = ?";
+        // Incluir el grupo en la consulta con JOIN
+        $query = "SELECT d.matricula, d.nombre, d.apellidos, d.password, d.direccion, d.sexo, d.telefono, g.clave_grupo 
+              FROM docentes d 
+              LEFT JOIN grupos g ON d.matricula = g.matricula_docente 
+              WHERE d.matricula = ?";
+
         $stmt = $this->conexion->prepare($query);
         $stmt->bind_param('s', $username);
         $stmt->execute();
         $stmt->store_result();
 
         if ($stmt->num_rows > 0) {
-            $stmt->bind_result($matricula, $nombre, $apellidos, $password_db, $direccion, $sexo, $telefono, $grupo);
+            $stmt->bind_result($matricula, $nombre, $apellidos, $password_db, $direccion, $sexo, $telefono, $clave_grupo);
             $stmt->fetch();
 
             if ($password == $password_db) {
-                // Login exitoso
                 return json_encode([
                     'matricula' => $matricula,
                     'nombre' => $nombre,
@@ -39,12 +43,13 @@ class Login
                     'direccion' => $direccion,
                     'sexo' => $sexo,
                     'telefono' => $telefono,
-                    'grupo' => $grupo,
+                    'clave_grupo' => $clave_grupo, // Agregado aquí
                     'userIsLoggedIn' => true,
                 ]);
             }
         }
 
-        return false; // Login fallido
+        return false;
     }
+
 }

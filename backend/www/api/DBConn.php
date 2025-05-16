@@ -2,7 +2,7 @@
 class DBConn extends mysqli
 {
     public static function newConnection() {
-        return new DBConn('database', 'root', 'tiger', 'babysecurity');
+        return new DBConn('shuttle.proxy.rlwy.net:21578', 'root', 'fzTFRQpStXgZzwHaSOpUWqmdNsrACCGA', 'railway');
 
     }
 
