@@ -73,14 +73,14 @@ ORDER BY a.apellidos;
             $listaAsistencia = [];
 
             while ($stmt->fetch()) {
-                $listaAsistencia[] = [
-                    'nocontrol' => $nocontrol,
-                    'nombre' => $nombre,
-                    'apellidos' => $apellidos,
-                    'fecha' => $fecha,
-                    'hora' => $hora,
-                    'estado' => $estado
-                ];
+                    $listaAsistencia[] = [
+                        'nocontrol' => $nocontrol,
+                        'nombre' => $nombre,
+                        'apellidos' => $apellidos,
+                        'fecha' => $fecha,
+                        'hora' => $hora,
+                        'estado' => $estado
+                    ];
             }
 
             return json_encode(['listaAsistencia' => $listaAsistencia]);

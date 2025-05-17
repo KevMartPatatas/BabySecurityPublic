@@ -15,6 +15,11 @@ include 'DBConn.php';
 include 'Login.php';
 include 'Alumnos.php';
 include 'Asistencias.php';
+include 'Personal.php';
+include 'Grupos.php';
+include 'alumnosBitacora.php';
+include 'BitacoraEdit.php';
+include 'actividadInsert.php';
 
 $rp = json_decode(file_get_contents('php://input'), true);
 if (!$rp || !isset($rp["option"])) {
@@ -28,7 +33,15 @@ $login = new Login($conexion);
 $getAlumnos = new Alumnos($conexion);
 $guardarAsistencia = new Asistencias($conexion);
 $obtenerAsistencias = new Asistencias($conexion);
-
+$getPersonal = new Personal($conexion);
+$updatePersonal = new Personal($conexion);
+$getGrupos = new Grupos($conexion);
+$updateAlumnos = new Alumnos($conexion);
+$agregarPersonal = new Personal($conexion);
+$agregarAlumnos = new Alumnos($conexion);
+$bitacoraAlumnos = new alumnosBitacora($conexion);
+$SelectActBitacora = new BitacoraEdit($conexion);
+$UpdateBitacora= new actividadInsert($conexion);
 
 $option = $rp["option"];
 
@@ -79,6 +92,147 @@ switch ($option) {
         } else {
             http_response_code(406);
             echo json_encode(["message" => "Error al obtener las asistencias en la base de datos"]);
+        }
+        break;
+
+    case 'getPersonal':
+        $response = $getPersonal->getPersonal();
+
+        if ($response) {
+            echo $response;
+        } else {
+            http_response_code(407);
+            echo json_encode(["message" => "Error al obtener la lista del personal"]);
+        }
+        break;
+
+    case 'updatePersonal':
+        $nombre = $rp["nombre"];
+        $apellidos = $rp["apellidos"];
+        $direccion = $rp["direccion"];
+        $sexo = $rp["sexo"];
+        $telefono = $rp["telefono"];
+        $rol = $rp["rol"];
+        $matricula = $rp["matricula"];
+        $response = $updatePersonal->updatePersonal($nombre, $apellidos, $direccion, $sexo, $telefono, $rol, $matricula);
+
+        if ($response) {
+            echo $response;
+        } else {
+            http_response_code(408);
+            echo json_encode(["message" => "Error al actualizar la personal en la base de datos"]);
+        }
+        break;
+
+    case 'getGrupos':
+        $response = $getGrupos->getGrupos();
+
+        if ($response) {
+            echo $response;
+        } else {
+            http_response_code(409);
+            echo json_encode(["message" => "Error al obtener los grupos en la base de datos"]);
+        }
+        break;
+
+    case 'updateAlumnos':
+        $nocontrol = $rp["nocontrol"];
+        $nombre = $rp["nombre"];
+        $apellidos = $rp["apellidos"];
+        $sexo = $rp["sexo"];
+        $status = $rp["status"];
+        $direccion = $rp["direccion"];
+        $clave_grupo = $rp["clave_grupo"];
+        $tutor_nombre = $rp["tutor_nombre"];
+        $tutor_apellidos = $rp["tutor_apellidos"];
+        $telefono = $rp["telefono"];
+
+        $response = $updateAlumnos->updateAlumno($nombre, $apellidos, $sexo, $status, $direccion, $clave_grupo, $tutor_nombre, $tutor_apellidos, $telefono, $nocontrol);
+
+        if ($response) {
+            echo $response;
+        } else {
+            http_response_code(409);
+            echo json_encode(["message" => "Error al obtener los grupos en la base de datos"]);
+        }
+        break;
+
+    case 'agregarDocente':
+        $nombre = $rp["nombre"];
+        $apellidos = $rp["apellidos"];
+        $matricula = $rp["matricula"];
+        $password = $rp["password"];
+        $rol = $rp["rol"];
+        $grupo = $rp["grupo"];
+        $direccion = $rp["direccion"];
+        $sexo = $rp["sexo"];
+        $telefono = $rp["telefono"];
+
+        $response = $agregarPersonal->agregarPersonal($nombre, $apellidos, $matricula, $password, $rol, $grupo, $direccion, $sexo, $telefono);
+
+        if ($response) {
+            echo $response;
+        } else {
+            http_response_code(410);
+            echo json_encode(["message" => "Error al obtener los grupos en la base de datos"]);
+        }
+        break;
+
+    case 'agregarAlumno':
+        $nocontrol = $rp["nocontrol"];
+        $nombre = $rp["nombre"];
+        $apellidos = $rp["apellidos"];
+        $direccion = $rp["direccion"];
+        $sexo = $rp["sexo"];
+        $grupo = $rp["grupo"];
+        $tutor_nombre = $rp["tutor_nombre"];
+        $tutor_apellidos = $rp["tutor_apellidos"];
+        $telefono = $rp["telefono"];
+
+        $response = $agregarAlumnos->agregarAlumno($nocontrol, $nombre, $apellidos, $direccion, $sexo, $grupo, $tutor_nombre, $tutor_apellidos, $telefono);
+
+        if ($response) {
+            echo $response;
+        } else {
+            http_response_code(410);
+            echo json_encode(["message" => "Error al obtener los grupos en la base de datos"]);
+        }
+        break;
+
+    case 'getBitacora':
+        $clave_grupo = $rp["clave_grupo"];
+        $response = $bitacoraAlumnos->getBitacora($clave_grupo);
+
+        if ($response) {
+            echo $response;
+        } else {
+            http_response_code(406);
+            echo json_encode(["message" => "Error al obtener la lista en la base de datos"]);
+        }
+        break;
+
+    case 'SelectActBitacora':
+        $response = $SelectActBitacora->SelectActBitacora();
+
+        if ($response) {
+            echo $response;
+        } else {
+            http_response_code(406);
+            echo json_encode(["message" => "Error al obtener la lista en la base de datos"]);
+        }
+        break;
+
+    case 'updateBitacora':
+        $fecha= $rp["fecha"];
+        $observaciones=$rp["observaciones"];
+        $clave_bitacora=$rp["clave_bitacora"];
+        $response = $UpdateBitacora->updateBitacora($fecha,$observaciones,$clave_bitacora);
+
+        if ($response) {
+            echo $response;
+        } else {
+            http_response_code(406);
+            echo json_encode(["message" => "Error al obtener la lista en la base de datos"]);
         }
         break;
 

@@ -17,7 +17,6 @@ const asistenciasPrevias = computed(() => props.asistenciasPrevias || [])
 const { alumnos: propsAlumnos } = toRefs(props)
 const emit = defineEmits(['updateCounts', 'enviarAsistencias'])
 
-// estado reactivo (vacío inicialmente, se llenan después)
 const asistencias = ref([])
 const retardos = ref([])
 
@@ -32,7 +31,6 @@ function inicializarAsistencias() {
       asistencias.value.push(previa.estado === 'presente')
       retardos.value.push(previa.estado === 'retardo')
     } else {
-      // Si no hay registro previo, asigna ambos false
       asistencias.value.push(false)
       retardos.value.push(false)
     }
@@ -51,7 +49,6 @@ function emitirAsistencias() {
   emit('enviarAsistencias', datos)
 }
 
-// Contadores
 function actualizarContadores() {
   const totalAlumnos = Array.isArray(propsAlumnos.value) ? propsAlumnos.value.length : 0
   const presentes = asistencias.value.filter(x => x).length
@@ -65,7 +62,6 @@ function actualizarContadores() {
   })
 }
 
-// Toggling de asistencia y retardo
 function toggleAsistencia(i) {
   asistencias.value[i] = !asistencias.value[i]
   if (asistencias.value[i]) retardos.value[i] = false
@@ -78,7 +74,6 @@ function toggleRetardo(i) {
   actualizarContadores()
 }
 
-// Observa cuando alumnos estén disponibles y actualiza
 watch(
   propsAlumnos,
   (nuevos) => {
@@ -89,7 +84,6 @@ watch(
   { immediate: true }
 )
 
-// Observa cambios en asistencias/retardos
 watch(
   [asistencias, retardos],
   actualizarContadores,
@@ -99,17 +93,15 @@ watch(
 defineExpose({ emitirAsistencias })
 </script>
 
-
-
 <template>
   <div class="alumnos-inscritos row">
     <div
       v-for="(alumno, index) in propsAlumnos"
       :key="index"
-      class="col-4 mb-4"
+      class="col-12 col-md-6 col-lg-4 mb-4"
     >
       <div
-        class="card w-100 h-100 rounded-4"
+        class="card alumno-card h-100 shadow-sm rounded-4 border-0"
         :class="{
           'asistencia-activa': asistencias[index],
           'retardo-activo': !asistencias[index] && retardos[index],
@@ -118,20 +110,16 @@ defineExpose({ emitirAsistencias })
       >
         <div class="card-body d-flex align-items-center justify-content-between">
           <div class="d-flex align-items-center flex-grow-1">
-            <div class="icon-circle fs-3">
-              <i class="fa-solid fa-user" style="color: #ababab;"></i>
+            <div class="icon-circle fs-3 me-3">
+              <i class="fa-solid fa-user" style="color: #6c757d;"></i>
             </div>
-            <div class="ms-3">
-              <h5 class="card-title">
-                {{ alumno.nombre }} {{ alumno.apellidos }}
-              </h5>
-              <p class="card-text" style="color: #333333; opacity: 70%;">
-                Grupo: {{ alumno.clave_grupo }}
-              </p>
+            <div>
+              <h5 class="card-title mb-1">{{ alumno.nombre }} {{ alumno.apellidos }}</h5>
+              <p class="card-text small text-muted mb-0">Grupo: {{ alumno.clave_grupo }}</p>
             </div>
           </div>
 
-          <div class="d-flex flex-column align-items-end">
+          <div class="d-flex flex-column align-items-end ms-3">
             <div class="form-check form-switch">
               <input
                 class="form-check-input"
@@ -141,9 +129,7 @@ defineExpose({ emitirAsistencias })
                 @change="toggleAsistencia(index)"
                 :class="{ 'opaco': retardos[index] }"
               />
-              <label class="form-check-label" :for="'asistencia-' + index">
-                Asistencia
-              </label>
+              <label class="form-check-label small" :for="'asistencia-' + index">Asistencia</label>
             </div>
 
             <div class="form-check mt-2">
@@ -154,12 +140,9 @@ defineExpose({ emitirAsistencias })
                 :checked="retardos[index]"
                 @change="toggleRetardo(index)"
               />
-              <label class="form-check-label" :for="'retardo-' + index">
-                Retardo
-              </label>
+              <label class="form-check-label small" :for="'retardo-' + index">Retardo</label>
             </div>
           </div>
-
         </div>
       </div>
     </div>
@@ -167,58 +150,46 @@ defineExpose({ emitirAsistencias })
 </template>
 
 <style scoped>
-.card-body {
-  display: flex;
-  align-items: center;
+.alumno-card {
+  transition: all 0.3s ease;
+  background-color: #fff;
+  border-left: 5px solid transparent;
+}
+
+.alumno-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 16px rgba(0,0,0,0.1);
 }
 
 .icon-circle {
-  height: 4rem;
-  width: 4rem;
+  height: 3.5rem;
+  width: 3.5rem;
   border-radius: 50%;
-  background-color: #fff;
+  background-color: #f1f1f1;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-  margin-right: 10px;
+  box-shadow: inset 0 0 4px rgba(0, 0, 0, 0.05);
 }
 
-.ms-3 {
-  margin-left: 10px;
-}
-
-.flex-grow-1 {
-  flex-grow: 1;
-}
-
-.d-flex {
-  display: flex;
-}
-
-.justify-content-between {
-  justify-content: space-between;
-}
-
-.align-items-center {
-  align-items: center;
-}
-
-/* Estados de asistencia */
+/* Estados */
 .asistencia-activa {
-  border: 2px solid #67BA9F;
+  border-left-color: #4EB294; /* antes: #67BA9F */
+  background-color: #e9fcf4;  /* antes: #f0fdf9 */
 }
 
 .retardo-activo {
-  border: 2px solid #F8DB7C;
+  border-left-color: #f4c842; /* antes: #f8db7c */
+  background-color: #fff8d5;  /* antes: #fffbe7 */
 }
 
 .ausente {
-  border: 2px solid #F8787D;
+  border-left-color: #f44350; /* antes: #f8787d */
+  background-color: #ffecec;  /* antes: #fff5f5 */
 }
 
-/* Opacidad si retardo está activo */
+
 .opaco {
-  opacity: 0.5;
+  opacity: 0.6;
 }
 </style>

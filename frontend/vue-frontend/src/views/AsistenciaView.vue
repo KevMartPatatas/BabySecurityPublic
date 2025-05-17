@@ -35,17 +35,16 @@ onMounted(async () => {
 
     nocontrol.value = response.data.listaAsistencia
 
-    // Verificamos que exista y sea array
     if (Array.isArray(response.data.listaAsistencia)) {
       listaAsistencia.value = response.data.listaAsistencia
     } else {
-      listaAsistencia.value = [] // Valor por defecto
+      listaAsistencia.value = []
     }
 
     console.log("Lista de : ", listaAsistencia.value)
   } catch (error) {
     console.error("Error al obtener lista de alumnos: ", error)
-    listaAsistencia.value = [] // fallback en caso de error
+    listaAsistencia.value = [] 
   }
 })
 
@@ -67,7 +66,7 @@ async function enviarFormularioAsistencia() {
 }
 
 function recibirAsistencias(datos) {
-  registros.value = datos // Guardamos los datos que vienen del componente hijo
+  registros.value = datos
   console.log('Datos recibidos del hijo:', datos)
 }
 
@@ -82,7 +81,6 @@ onMounted(async () => {
   }
 })
 
-// Manejador del evento que viene del hijo
 function handleUpdateCounts({ presentes: p, ausentes: a, retardos: r }) {
   presentes.value = p
   ausentes.value  = a
@@ -107,12 +105,10 @@ function handleUpdateCounts({ presentes: p, ausentes: a, retardos: r }) {
   <AsistenciaContador estado="Ausentes"  bgcolor="#F8787D" :contador="ausentes"/>
   <AsistenciaContador estado="Retardos"  bgcolor="#F8DB7C" :contador="retardos"/>
 
-  <!-- El botón se va a la derecha gracias a ms-auto -->
   <button type="submit" class="btn ms-auto text-white" style="background-color: #4F88ED;"><i class="fa-solid fa-floppy-disk"></i> Guardar asistencias</button>
 </div>
 
     <div class="container">
-      <!-- Le decimos que nos emita los nuevos totales -->
               <AsistenciaAlumnos
   ref="asistenciaComponent"
   :alumnos="alumnosInscritos"

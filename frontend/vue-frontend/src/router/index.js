@@ -5,10 +5,13 @@ import HomeView from '../views/HomeView.vue'
 import LoginView from '@/views/LoginView.vue';
 import Dashboard from "@/views/Dashboard.vue";
 import GestionNinos from '@/views/GestionView.vue';
-import Reportes from '@/components/Reportes.vue';
 import Inicio from '@/views/InicioView.vue';
 import AsistenciaView from '@/views/AsistenciaView.vue';
 import NotificacionesView from '@/views/NotificacionesView.vue';
+import ResumenView from '@/views/ResumenView.vue';
+import PersonalView from '@/views/PersonalView.vue';
+import ReporteView from '@/views/ReporteView.vue';
+import BitacoraView from '@/views/BitacoraView.vue';
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -26,9 +29,9 @@ const router = createRouter({
       meta: { requiresAuth: true },
     },
     {
-      path: '/reporte',
-      name: 'Reporte',
-      component: Reportes,
+      path: '/reportes',
+      name: 'Reportes',
+      component: ReporteView,
       meta: { requiresAuth: true },
     },
     {
@@ -47,6 +50,24 @@ const router = createRouter({
       path: '/notificaciones',
       name: 'Notificaciones',
       component: NotificacionesView,
+      meta: { requiresAuth: true },
+    },
+    {
+      path: '/resumen',
+      name: 'Resumen',
+      component: ResumenView,
+      meta: { requiresAuth: true },
+    },
+    {
+      path: '/personal',
+      name: 'Personal',
+      component: PersonalView,
+      meta: { requiresAuth: true },
+    },
+    {
+      path: '/bitacora',
+      name: 'Bitacora',
+      component: BitacoraView,
       meta: { requiresAuth: true },
     }
   ]

@@ -29,11 +29,6 @@
           </RouterLink>
         </li>
         <li class="nav-item">
-          <RouterLink to="/historial" class="nav-link" active-class="active">
-            <span class="d-none d-sm-inline text-white">Historial</span>
-          </RouterLink>
-        </li>
-        <li class="nav-item">
           <RouterLink to="/personal" class="nav-link" active-class="active">
             <span class="d-none d-sm-inline text-white">Personal</span>
           </RouterLink>
@@ -46,10 +41,10 @@
       </ul>
       <LogoutButton />
       <RouterLink to="/notificaciones">
-      <button class="btn btn-warning ms-auto rounded-circle">
-        <i class="bi bi-bell-fill"></i>
-      </button>
-      </RouterLink>
+  <button class="btn btn-notification rounded-circle d-flex align-items-center justify-content-center">
+    <i class="bi bi-bell-fill"></i>
+  </button>
+</RouterLink>
     </nav>
 </template>
 
@@ -61,12 +56,33 @@
 .nav-link {
   padding-bottom: 0.25rem;
   line-height: 1.2;
-  display: inline-block; /* asegúrate de que el border se comporte bien */
+  display: inline-block;
 }
 
 .nav-link.active {
   border-bottom: 5px solid #A3D9A5;
   font-weight: bold;
-  /* ARREGLAR ESTO XDDDDDDD*/
 }
+
+.btn-notification {
+  width: 48px;
+  height: 48px;
+  background-color: white;
+  color: #7fb3d5; /* azul pastel */
+  border: none;
+  box-shadow: 0 2px 8px rgba(127, 179, 213, 0.3);
+  transition: background-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.btn-notification i {
+  font-size: 1.5rem;
+}
+
+.btn-notification:hover {
+  background-color: #7fb3d5; /* azul pastel */
+  color: white;
+  box-shadow: 0 4px 12px rgba(127, 179, 213, 0.6);
+  cursor: pointer;
+}
+
 </style>

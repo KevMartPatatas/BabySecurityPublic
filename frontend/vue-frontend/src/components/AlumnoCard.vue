@@ -19,7 +19,7 @@
 defineProps({
   bgClass: {
     type: String,
-    default: 'bg-danger' // puedes alternar con 'bg-info' o mas
+    default: 'bg-danger'
   }
 });
 </script>

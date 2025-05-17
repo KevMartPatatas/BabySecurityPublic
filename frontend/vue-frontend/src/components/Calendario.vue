@@ -1,3 +1,22 @@
+<script setup>
+import { ref } from 'vue';
+
+const hoy = new Date();
+
+
+const day = ref(null)
+const month = ref(null)
+const year = ref(null)
+
+day.value = hoy.getDate();
+month.value = hoy.getMonth()
+year.value = hoy.getFullYear()
+
+
+
+</script>
+
+
 <template>
   <div class="calendario-container mt-3 me-4">
 
@@ -6,7 +25,7 @@
     </div>
 
     <button class="calendario-boton">
-      dd/mm/aa
+      {{ day }}/{{ month }}/{{ year }}
     </button>
   </div>
 </template>

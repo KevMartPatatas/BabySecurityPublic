@@ -21,8 +21,12 @@ import notificacionesImg from '@/assets/notificaciones.png'
 
      <!-- Cards -->
     <div class="ms-5 d-flex justify-content-start gap-3 flex-wrap">
-      <InicioActividades titulo="Resumen del dia" :img="documentoImg" bgcolor="#80CEE1" textcolor="#1E3A5F"/>
-      <InicioActividades titulo="Notificaciones importantes" :img="notificacionesImg" bgcolor="#FFE599" textcolor="#6B4226"/>
+      <RouterLink to="/resumen">
+        <InicioActividades titulo="Itinerario" :img="documentoImg" bgcolor="#80CEE1" textcolor="#1E3A5F"/>
+      </RouterLink>
+      <RouterLink to="/notificaciones">
+        <InicioActividades titulo="Notificaciones" :img="notificacionesImg" bgcolor="#FFE599" textcolor="#6B4226"/>
+      </RouterLink>
     </div>
 
   </div>

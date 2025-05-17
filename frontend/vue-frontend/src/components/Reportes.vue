@@ -85,21 +85,6 @@ import { ref, computed } from 'vue'
 const busqueda = ref('')
 const personaSeleccionada = ref({})
 
-const personas = ref([
-  { nombre: 'Kevin', tipo: 'Docente', grupo: 3 },
-  { nombre: 'Jesus', tipo: 'Docente', grupo: 4 },
-  { nombre: 'Carlos', tipo: 'Docente', grupo: 2 },
-  { nombre: 'Pablo', tipo: 'Docente', grupo: 1 },
-  { nombre: 'Maria Martinez', tipo: 'Directora' },
-  { nombre: 'Sara López', tipo: 'Subdirectora' }
-])
-
-const filtradas = computed(() =>
-  personas.value.filter(p =>
-    p.nombre.toLowerCase().includes(busqueda.value.toLowerCase())
-  )
-)
-
 function generarPDF() {
   const element = document.getElementById('reportePDF')
   html2pdf().from(element).save('reporte.pdf')
