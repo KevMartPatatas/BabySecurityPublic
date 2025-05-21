@@ -25,29 +25,60 @@ const abrirModalEdicion = (alumno) => {
   alumnoEditable.value = { ...alumno };
 };
 
-const guardarCambios = () => {
-  console.log("Alumno editado:", alumnoEditable.value);
-};
-
-const guardarCambioss = async () => {
+const guardarActu = async () => {
   try {
     const response = await axios.post("http://localhost:80/api/Index.php", {
       option: "updateBitacora",
       fecha: alumnoEditable.value.fecha,
       observaciones: alumnoEditable.value.observaciones,
-      clave_bitacora:alumnoEditable.value.clave_bitacora
+      nombre_actividad: alumnoEditable.value.nombre_actividad,
+      clave_bitacora: alumnoEditable.value.clave_bitacora
+
+
     });
 
     console.log("Respuesta del backend:", response.data);
 
     Swal.fire({
-  position: "top-end",
-  icon: "success",
-  title: "Guardado Correctamente",
-  showConfirmButton: false,
-  timer: 1500});
+      position: "top-end",
+      icon: "success",
+      title: "Guardado Correctamente",
+      showConfirmButton: false,
+      timer: 1500
+    });
 
- 
+    console.log("Alumno editado:", alumnoEditable.value);
+  } catch (error) {
+    console.error("Error al guardar los cambios:", error);
+    alert("Ocurrió un error al guardar los cambios.");
+  }
+};
+
+
+const guardarInsert = async () => {
+  try {
+    const response = await axios.post("http://localhost:80/api/Index.php", {
+      option: "insertBitacora",
+      clave_actividad: alumnoEditable.value.nombre_actividad,
+      fecha: alumnoEditable.value.fecha,
+      alumno: alumnoEditable.value.nocontrol,
+      observaciones: alumnoEditable.value.observaciones
+    });
+
+    console.log("Respuesta del backend:", response.data);
+
+    Swal.fire({
+      position: "top-end",
+      icon: "success",
+      title: "Guardado Correctamente",
+      showConfirmButton: false,
+      timer: 1500
+    });
+
+    console.log("Alumno id :",   alumnoEditable.value.nombre_actividad,
+      alumnoEditable.value.fecha,
+      alumnoEditable.value.nocontrol,
+      alumnoEditable.value.observaciones);
   } catch (error) {
     console.error("Error al guardar los cambios:", error);
     alert("Ocurrió un error al guardar los cambios.");
@@ -56,70 +87,60 @@ const guardarCambioss = async () => {
 
 
 
+
 </script>
 
 <template>
-  <div class="alumnos-inscritos row">
-    <div class="card-main col-md-2 mb-1" v-for="(alumno, index) in alumnos" :key="index">
-
-      <div class="card w-80 h-100 rounded-4" :class="{
+  <div class="alumnos-inscritos row gx-3 gy-4">
+    <div class="col-md-4" v-for="(alumno, index) in alumnos" :key="index">
+      <div class="card shadow-sm rounded-4 border-0" :class="{
         'bg-m': alumno.sexo === 'M' && alumno.status !== 'inactivo',
         'bg-f': alumno.sexo === 'F' && alumno.status !== 'inactivo',
         'bg-gris': alumno.status === 'inactivo'
       }">
-
-        <div class="card-body d-flex align-items-center">
-
-          <div class="icon-circle fs-4">
-            <i class="fa-solid fa-user" style="color: #ababab;"></i>
-          </div>
-          <div class="ms-4">
-            <h5 class="card-title">{{ alumno.nombre }} {{ alumno.apellidos }}</h5>
-
-            <div class="d-flex justify-content-between align-items-center ">
-              <p class="card-text"> <strong>Grupo: </strong>{{ alumno.clave_grupo }}</p>
+        <div class="card-body d-flex align-items-center justify-content-between">
+          <div class="d-flex align-items-center">
+            <div class="icon-circle">
+              <i class="fa-solid fa-user"></i>
             </div>
-
-          </div>
-          <div class="ms-3 flex-grow-1">
-
-            <div class="icon-stack">
-              <i class="fa-solid fa-file-pen" style="cursor: pointer;" data-bs-toggle="modal"
-                data-bs-target="#modalEditarAlumno" @click="abrirModalEdicion(alumno)"></i>
-              <i class="fa-solid fa-circle-info" style="cursor: pointer;" data-bs-toggle="modal"
-                data-bs-target="#exampleModal" @click="abrirModal(alumno)"></i>
+            <div class="ms-3">
+              <h5 class="mb-1">{{ alumno.nombre }} {{ alumno.apellidos }}</h5>
+              <p class="mb-0"><strong>Grupo:</strong> {{ alumno.clave_grupo }}</p>
             </div>
-
+          </div>
+          <div class="icon-stack text-end">
+            <i class="fa-solid fa-file-pen" data-bs-toggle="modal" data-bs-target="#modalEditarAlumno"
+              @click="abrirModalEdicion(alumno)"></i>
+            <i class="fa-solid fa-circle-info" data-bs-toggle="modal" data-bs-target="#exampleModal"
+              @click="abrirModal(alumno)"></i>
           </div>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- Modal -->
+  <!-- Modal Info -->
   <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-      <div class="modal-content">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content rounded-4">
         <div class="modal-header">
-          <h1 class="modal-title fs-5" id="exampleModalLabel">Datos del Alumno</h1>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          <h5 class="modal-title" id="exampleModalLabel">Datos del Alumno</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
         </div>
         <div class="modal-body">
-          <!-- Mostrar los datos del alumno seleccionado -->
           <p><strong>Nombre:</strong> {{ alumnoSeleccionado?.nombre }} {{ alumnoSeleccionado?.apellidos }}</p>
           <p><strong>No de control:</strong> {{ alumnoSeleccionado?.nocontrol }}</p>
           <p><strong>Grupo:</strong> {{ alumnoSeleccionado?.clave_grupo }}</p>
-          <p><strong>Actividad:</strong> {{ alumnoSeleccionado?.nombre_actividad || 'sin actividad' }}</p>
+          <p><strong>Actividad:</strong> {{ alumnoSeleccionado?.nombre_actividad || 'Sin actividad' }}</p>
           <p><strong>Observaciones:</strong> {{ alumnoSeleccionado?.observaciones || 'Sin observaciones' }}</p>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+          <button class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- Modal de edición -->
   <div class="modal fade" id="modalEditarAlumno" tabindex="-1" aria-labelledby="modalEditarAlumnoLabel"
     aria-hidden="true">
     <div class="modal-dialog">
@@ -130,6 +151,9 @@ const guardarCambioss = async () => {
         </div>
         <div class="modal-body">
           <form @submit.prevent>
+             <div class="mb-3">
+              <label class="form-label"><strong>id:</strong> {{ alumnoEditable.nocontrol }}</label>
+            </div>
             <div class="mb-3">
               <label class="form-label"><strong>Nombre:</strong> {{ alumnoEditable.nombre }}</label>
             </div>
@@ -149,118 +173,137 @@ const guardarCambioss = async () => {
                   </strong>
                 </option>
                 <option class="card-body col-md-2 mb-1" v-for="(Actividades, index) in Actividad" :key="index">
-                  {{ Actividades.nombre_actividad}} </option>
+                  {{ Actividades.nombre_actividad }} </option>
+                <!-- Agrega más opciones según tus actividades reales -->
               </select>
-              </div>
-              
-              <div class="mb-3">
-                <label class="form-label"><strong>Observaciones:</strong></label>
-                <textarea class="form-control" rows="3" v-model="alumnoEditable.observaciones"
-                  placeholder="Escribe observaciones..."></textarea>
-              </div>
-              <div class="mb-3">
-                <label class="form-label"><strong>Fecha:</strong></label>
-                <input type="date" class="form-control" v-model="alumnoEditable.fecha" />
-              </div>
+            </div>
 
-      
+            <div class="mb-3">
+              <label class="form-label"><strong>Observaciones:</strong></label>
+              <textarea class="form-control" rows="3" v-model="alumnoEditable.observaciones"
+                placeholder="Escribe observaciones..."></textarea>
+            </div>
+            <div class="mb-3">
+              <label class="form-label"><strong>Fecha:</strong></label>
+              <input type="date" class="form-control" v-model="alumnoEditable.fecha" />
+            </div>
+
+
           </form>
         </div>
-        <div class="modal-footer" id="modalEditarAlumno"  tabindex="-1" aria-labelledby="modalEditarAlumnoLabel" >
+        <div class="modal-footer" id="modalEditarAlumno" tabindex="-1" aria-labelledby="modalEditarAlumnoLabel">
+
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-          <button type="button" class="btn btn-primary" @click="guardarCambioss" >Guardar</button>
+          <button type="button" class="btn btn-primary" @click="guardarActu" v-if="alumnoEditable?.clave_bitacora">Guardar</button>
+          <button type="button" class="btn btn-primary" @click="guardarInsert" v-else="alumnoEditable?.clave_bitacora=== 'null'">Guardar</button>
+
+
+
         </div>
       </div>
-    </div>
-  </div>
-
+    </div>
+  </div>
 </template>
 
 
-
-
-
 <style scoped>
-.bg-gris {
-  background-color: #CCCCCC;
-  color: #1E1E1E;
-  border: 1px solid #999999;
+.card-main {
+  padding: 0.5rem;
 }
 
-.card-main {
-  margin: 40px;
-  /* reduce esto si es necesario */
-  padding: 1px;
+.card {
+  border-radius: 1.5rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
 
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.12);
 }
 
 .bg-m {
-  background-color: #80CEE1;
-  color: #1E3A5F;
-  border: 1px solid;
+  background-color: #ccefff; /* celeste pastel */
+  color: #0c3c60;
 }
 
 .bg-f {
-  background-color: #EA899A;
-  color: #5F1E58;
+  background-color: #ffe0ef; /* rosa pastel */
+  color: #5e184d;
+}
+
+.bg-gris {
+  background-color: #f0f0f0;
+  color: #3e3e3e;
 }
 
 .card-body {
   display: flex;
   align-items: center;
+  padding: 1rem;
 }
 
 .icon-circle {
-  height: 4rem;
-  width: 4rem;
+  height: 3.5rem;
+  width: 3.5rem;
   border-radius: 50%;
-  background-color: #fff;
+  background-color: #ffffff;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-  margin-right: 10px;
+  box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.1);
+  margin-right: 1rem;
+  font-size: 1.5rem;
 }
 
-.ms-3 {
-  margin-left: 10px;
+.icon-circle i {
+  color: #7a7a7a;
 }
 
-.ms-4 {
-  margin-left: 10px;
+.card-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 0.25rem;
 }
 
-.flex-grow-1 {
-  flex-grow: 1;
-}
-
-.d-flex {
-  display: flex;
-}
-
-.justify-content-between {
-  justify-content: space-between;
-}
-
-.align-items-center {
-  align-items: center;
+.card-text {
+  font-size: 0.95rem;
+  margin-bottom: 0;
 }
 
 .icon-stack {
   display: flex;
   flex-direction: column;
-  /* Alinea los íconos verticalmente */
   align-items: center;
-  /* Centra los íconos horizontalmente */
-  gap: 0.8rem;
-  /* Espacio entre íconos (ajustable) */
+  gap: 0.75rem;
   margin-left: auto;
-  /* Mueve a la derecha si está dentro de un contenedor flex */
-  margin-right: 1px;
-  /* Separación desde el borde derecho */
-  padding: 0.2rem;
-  /* Espaciado interno */
-  background-color: transparent;
-  /* Puedes darle un fondo si quieres */
+  cursor: pointer;
+}
+
+.icon-stack i {
+  font-size: 1.2rem;
+  transition: color 0.3s;
+}
+
+.icon-stack i:hover {
+  color: #555;
+}
+
+@media (min-width: 768px) {
+  .alumnos-inscritos {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+  }
+
+  .card-main {
+    width: 33.3333%;
+  }
+}
+
+@media (max-width: 767px) {
+  .card-main {
+    width: 100%;
+  }
 }
 </style>

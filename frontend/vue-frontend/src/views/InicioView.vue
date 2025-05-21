@@ -8,8 +8,9 @@ import notificacionesImg from '@/assets/notificaciones.png'
 
   const userStore = useUserStore()
   const nombre = userStore.nombre
+  const grupo = userStore.clave_grupo
 
-  console.log(nombre)
+  console.log(nombre, grupo)
 </script>
 
 <template>

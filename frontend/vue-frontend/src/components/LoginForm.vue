@@ -86,16 +86,7 @@ function login() {
                 Iniciar Sesión
               </button>
 
-              <div class="d-flex align-items-center my-3">
-                <hr class="flex-grow-1 border-2" />
-                <span class="px-3 text-nowrap">O crear cuenta</span>
-                <hr class="flex-grow-1 border-2" />
-              </div>
 
-              <!-- Botón de envío -->
-              <button type="submit" class="btn btn-register w-100 rounded-5 text-white">
-                Crear cuenta
-              </button>
 
             </form>
 

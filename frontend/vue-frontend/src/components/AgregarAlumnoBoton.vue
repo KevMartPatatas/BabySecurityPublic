@@ -61,6 +61,15 @@ console.log(nocontrol.value)
     })
 
     console.log(response.data.mensaje)
+
+    Swal.fire({
+  position: "top-end",
+  icon: "success",
+  title: response.data.mensaje,
+  showConfirmButton: false,
+  timer: 1500
+});
+
   } catch (error) {
     console.log("Error en la insersion de alumnos frontend ",error)
   }

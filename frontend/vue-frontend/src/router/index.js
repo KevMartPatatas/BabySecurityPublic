@@ -12,6 +12,7 @@ import ResumenView from '@/views/ResumenView.vue';
 import PersonalView from '@/views/PersonalView.vue';
 import ReporteView from '@/views/ReporteView.vue';
 import BitacoraView from '@/views/BitacoraView.vue';
+import ListaReportes from '@/views/ListaReportes.vue';
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -68,6 +69,12 @@ const router = createRouter({
       path: '/bitacora',
       name: 'Bitacora',
       component: BitacoraView,
+      meta: { requiresAuth: true },
+    },
+    {
+      path: '/reportes/listado',
+      name: 'Listado',
+      component: ListaReportes,
       meta: { requiresAuth: true },
     }
   ]

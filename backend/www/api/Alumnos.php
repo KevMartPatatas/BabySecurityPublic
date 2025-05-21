@@ -14,8 +14,8 @@ class Alumnos
         $query = "SELECT a.no_control, a.nombre, a.apellidos, a.sexo, a.status, 
                      a.tutor_nombre, a.tutor_apellidos, a.direccion, a.telefono_tutor, a.clave_grupo
               FROM alumnos a
-              JOIN grupos g ON a.clave_grupo = g.clave_grupo 
-              WHERE g.matricula_docente = ?";
+              JOIN docentes d ON a.clave_grupo = d.grupo 
+              WHERE d.matricula_docente = ?";
 
         $stmt = $this->conexion->prepare($query);
         if (!$stmt) {

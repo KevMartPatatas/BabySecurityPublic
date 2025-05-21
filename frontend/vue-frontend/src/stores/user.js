@@ -10,7 +10,7 @@ export const useUserStore = defineStore('user', () => {
         const matricula = ref(null)
         const password = ref(null)
         const userIsLoggedIn = ref(false)
-        const clave_grupo = ref(null)
+        const grupo = ref(null)
         const rol = ref(null)
 
         async function login(username, password) {
@@ -24,10 +24,10 @@ export const useUserStore = defineStore('user', () => {
                 console.log(response.data)
                 nombre.value = response.data.nombre
                 matricula.value = response.data.matricula
-                clave_grupo.value = response.data.clave_grupo
+                grupo.value = response.data.grupo
                 rol.value = response.data.rol
                 userIsLoggedIn.value = response.data.userIsLoggedIn;
-                console.log(nombre.value, matricula.value, clave_grupo.value, rol.value)
+                console.log(nombre.value, matricula.value, grupo.value, rol.value)
         
                 // Redirigir al Home
                 router.push({ name: "Inicio" });
@@ -44,7 +44,7 @@ export const useUserStore = defineStore('user', () => {
             this.userIsLoggedIn = false
         }
 
-        return {nombre, rol, clave_grupo, matricula, userIsLoggedIn, $reset, login }
+        return {nombre, rol, grupo, matricula, userIsLoggedIn, $reset, login }
     },
     {
         persist: true,

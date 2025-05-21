@@ -51,6 +51,7 @@ onMounted(async () => {
 async function enviarFormularioAsistencia() {
   asistenciaComponent.value?.emitirAsistencias()
   console.log('Datos a enviar:', registros.value)
+  let cargando = true
 
   try {
     const response = await axios.post("http://localhost:80/api/Index.php", {
@@ -58,10 +59,20 @@ async function enviarFormularioAsistencia() {
       option: "guardarAsistencia"
     })
 
+    Swal.fire({
+  position: "top-end",
+  icon: "success",
+  title: response.data.message,
+  showConfirmButton: false,
+  timer: 1500
+});
+
     console.log("Respuesta del servidor: ", response.data)
   }
   catch (error) {
     console.error("Error al guardar el registro de asistencias")
+  } finally {
+    cargando = false
   }
 }
 
@@ -105,11 +116,12 @@ function handleUpdateCounts({ presentes: p, ausentes: a, retardos: r }) {
   <AsistenciaContador estado="Ausentes"  bgcolor="#F8787D" :contador="ausentes"/>
   <AsistenciaContador estado="Retardos"  bgcolor="#F8DB7C" :contador="retardos"/>
 
-  <button type="submit" class="btn ms-auto text-white" style="background-color: #4F88ED;"><i class="fa-solid fa-floppy-disk"></i> Guardar asistencias</button>
+  <button v-if="listaAsistencia" type="submit" class="btn ms-auto text-white" style="background-color: #4F88ED;"><i class="fa-solid fa-floppy-disk"></i> Guardar asistencias</button>
 </div>
 
     <div class="container">
               <AsistenciaAlumnos
+              v-if="listaAsistencia"
   ref="asistenciaComponent"
   :alumnos="alumnosInscritos"
   :asistenciasPrevias="listaAsistencia"

@@ -20,6 +20,8 @@ include 'Grupos.php';
 include 'alumnosBitacora.php';
 include 'BitacoraEdit.php';
 include 'actividadInsert.php';
+include 'Reportes.php';
+include 'ActividadInto.php';
 
 $rp = json_decode(file_get_contents('php://input'), true);
 if (!$rp || !isset($rp["option"])) {
@@ -41,7 +43,11 @@ $agregarPersonal = new Personal($conexion);
 $agregarAlumnos = new Alumnos($conexion);
 $bitacoraAlumnos = new alumnosBitacora($conexion);
 $SelectActBitacora = new BitacoraEdit($conexion);
-$UpdateBitacora= new actividadInsert($conexion);
+$UpdateBitacora= new ActividadInsert($conexion);
+$subirReporte = new Reportes($conexion);
+$getReportes = new Reportes($conexion);
+$insertBitacora = New ActividadInto($conexion);
+$agregarPersonalGrupo = New Personal($conexion);
 
 $option = $rp["option"];
 
@@ -169,6 +175,7 @@ switch ($option) {
         $telefono = $rp["telefono"];
 
         $response = $agregarPersonal->agregarPersonal($nombre, $apellidos, $matricula, $password, $rol, $grupo, $direccion, $sexo, $telefono);
+        $response = $agregarPersonalGrupo->agregarGrupo($grupo, $matricula);
 
         if ($response) {
             echo $response;
@@ -206,7 +213,7 @@ switch ($option) {
         if ($response) {
             echo $response;
         } else {
-            http_response_code(406);
+            http_response_code(411);
             echo json_encode(["message" => "Error al obtener la lista en la base de datos"]);
         }
         break;
@@ -217,7 +224,7 @@ switch ($option) {
         if ($response) {
             echo $response;
         } else {
-            http_response_code(406);
+            http_response_code(412);
             echo json_encode(["message" => "Error al obtener la lista en la base de datos"]);
         }
         break;
@@ -225,8 +232,52 @@ switch ($option) {
     case 'updateBitacora':
         $fecha= $rp["fecha"];
         $observaciones=$rp["observaciones"];
+        $nombre_actividad =$rp["nombre_actividad"];
         $clave_bitacora=$rp["clave_bitacora"];
-        $response = $UpdateBitacora->updateBitacora($fecha,$observaciones,$clave_bitacora);
+        $response = $UpdateBitacora->updateBitacora($fecha,$observaciones,$nombre_actividad,$clave_bitacora);
+
+        if ($response) {
+            echo $response;
+        } else {
+            http_response_code(406);
+            echo json_encode(["message" => "Error al obtener la lista en la base de datos"]);
+        }
+        break;
+
+    case 'subirReporte':
+        $para = $rp["para"];
+        $para_nombre = $rp["para_nombre"];
+        $por = $rp["por"];
+        $por_nombre = $rp["por_nombre"];
+        $titulo = $rp["titulo"];
+        $contenido = $rp["contenido"];
+        $response = $subirReporte->subirReporte($para, $para_nombre, $por, $por_nombre, $titulo, $contenido);
+
+        if ($response) {
+            echo $response;
+        } else {
+            http_response_code(414);
+            echo json_encode(["message" => "Error al obtener la lista en la base de datos"]);
+        }
+        break;
+
+    case 'getReportes':
+        $response = $getReportes->getReportes();
+
+        if ($response) {
+            echo $response;
+        } else {
+            http_response_code(415);
+            echo json_encode(["message" => "Error al obtener la lista en la base de datos"]);
+        }
+        break;
+
+    case 'insertBitacora':
+        $clave_actividad= $rp["clave_actividad"];
+        $fecha=$rp["fecha"];
+        $alumno =$rp["alumno"];
+        $observaciones=$rp["observaciones"];
+        $response = $insertBitacora->insertBitacora($clave_actividad,$fecha,$alumno,$observaciones);
 
         if ($response) {
             echo $response;

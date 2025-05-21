@@ -21,10 +21,8 @@ class Login
         }
 
         // Incluir el grupo en la consulta con JOIN
-        $query = "SELECT d.matricula, d.nombre, d.apellidos, d.password, d.direccion, d.sexo, d.telefono, g.clave_grupo, d.rol
-              FROM docentes d 
-              LEFT JOIN grupos g ON d.matricula = g.matricula_docente 
-              WHERE d.matricula = ?";
+        $query = "SELECT matricula, nombre, apellidos, password, direccion, sexo, telefono, grupo, rol
+              FROM docentes WHERE matricula = ?";
 
         $stmt = $this->conexion->prepare($query);
         $stmt->bind_param('s', $username);
@@ -43,7 +41,7 @@ class Login
                     'direccion' => $direccion,
                     'sexo' => $sexo,
                     'telefono' => $telefono,
-                    'clave_grupo' => $clave_grupo, // Agregado aquí
+                    'grupo' => $clave_grupo, // Agregado aquí
                     'rol' => $rol,
                     'userIsLoggedIn' => true,
                 ]);
